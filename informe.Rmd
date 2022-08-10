@@ -1,0 +1,83 @@
+---
+title: "Informe estadístico sobre la brecha laboral en cuestiones de género en Argentina (1982-2018)"
+author: "Patricia Perrone y Marianela Pi"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Cargar los paquetes necesarios acá
+library(usethis)
+library(readr)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+
+## Introducción
+
+<p>El objetivo de este informe es visibilizar las diferencias que, de acuerdo al género de las personas, pueden encontrarse en el ámbito del mercado de trabajo en Argentina desde el año 1982 hasta 2018, como el desempleo, la cantidad de empleadores/as, la distribución de las tareas domésticas, y el acoso sexual. Para ello se presenta una serie de indicadores, cuadros y gráficos, que intentan responder distintos tipos de preguntas. </p>
+
+<p>Entre ellas se encuentran las siguientes:<b>¿cómo son los índices de desempleo de acuerdo al género de las personas?, ¿hay diferencia entre varones y mujeres cuando hablamos de trabajo informal?, ¿y cuando hablamos de cargos jerárquicos?, ¿qué tanta diferencia hay entre los ingresos de los varones y de las mujeres?, ¿los varones cobran más por cada hora trabajada?, ¿trabajan las mujeres menos horas que los varones?, ¿qué pasa si consideramos trabajo no sólo a lo que se remunera sino también al trabajo doméstico?</b>.</p>
+
+<p>En el primer apartado, se realiza un análisis sobre la diversidad en la dedicación al trabajo remunerado y trabajo doméstico en el caso de las mujeres, dado que este elemento constituye, según la bibliografía especializada (Esquivel, 2009; D’alessandro, 2016), el punto de partida de la desigualdad en el mercado de trabajo. En el segundo, se analiza la evolución de la ocupación de puestos jerárquicos y la tasa de desempleo. En el tercero, se examina la informalidad laboral. En el ultimo apartado, se analiza los datos de acoso sexual.</p>
+
+<p>Los datos utilizados en este informe fueron tomados por el Banco Mundial sobre empleo/desempleo y género para algunos países de Latinoamérica y el Caribe, entre los años 1970 y 2018. Estos datos fueron provintos en formato de <em>data-frame</em> y contienen una cantidad de variables que aportan datos sobre el empleo/desempleo, tipo de empleo/actividad y legislación.</p>
+
+<p>Para ajustar los datos al alcance de este análisis, se utilizarán sólo los datos de Argentina comprendidos entre los años 1982 y 2018, que es el período en donde Argentina relevó datos. Fuera de ese período no hay información disponible.</p>
+
+
+## Exploración de los datos
+
+
+```{r}
+# Código para cargar o leer los datos
+empleo_genero <- read.csv("datos/empleo_genero.csv") %>% filter(pais_region=="Argentina") %>% select(1,16:52)
+
+# Filtramos por país (Argentina) y eliminamos las columnas de años que no tienen datos para simplificar el análisis
+```
+
+```{r}
+# Transposición de los datos de la tabla
+empleo_Arg <- pivot_longer(empleo_genero, cols=2:38, names_to = "Anio", values_to = "cantidad")
+```
+
+
+```{r}
+# comparación del desempleo por género, filtro variable desempleo y agrego column con el sexo
+
+desempleo <- filter(empleo_Arg,variable %in% c("desempleo_mujeres","desempleo_hombres")) %>%
+            mutate(sexo = ifelse(variable == "desempleo_mujeres",0,1))
+
+ggplot(desempleo,aes(Anio,cantidad, fill = variable)) + geom_col() + labs(title = "Desempleo femenino y masculino por año")
+
+
+```
+```{r}
+
+ggplot(desempleo,aes(Anio,cantidad)) + geom_point(aes(color = variable)) + labs(title = "Desempleo femenino y masculino por año")
+```
+
+
+
+```{r}
+# Cödigo de R acá 
+# Agregá más bloques según sea necesario
+```
+
+
+
+## Hipótesis
+
+<p> Las cuestiones de género</p>
+
+## Conclusiones
+
+
+
+
+
+
